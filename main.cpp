@@ -9,18 +9,31 @@ struct Entity
     char symbol;
 };
 
-void drawMap(const std::vector<std::string> &map, const Entity &player)
+void drawMap(const std::vector<std::string> &map, const Entity &player, const std::vector<Entity> &enemies)
 {
 
     for (std::size_t y = 0; y < map.size(); y++)
     {
         for (std::size_t x = 0; x < map[y].size(); x++)
         {
+            bool drawn = false;
+
             if (x == player.x && y == player.y)
             {
-                std::cout << "@";
+                std::cout << player.symbol;
+                drawn = true;
             }
-            else
+
+            for (std::size_t i =0; i < enemies.size(); i++)
+            {
+                if (x == enemies[i].x && y == enemies[i].y)
+                {
+                    std::cout << enemies[i].symbol;
+                    drawn = true;
+                }
+            }
+
+            if (!drawn)
             {
                 std::cout << map[y][x];
             }
@@ -29,7 +42,8 @@ void drawMap(const std::vector<std::string> &map, const Entity &player)
     }
 }
 
-void movePlayer(const std::vector<std::string> &map, char command, Entity &player){
+void movePlayer(const std::vector<std::string> &map, char command, Entity &player)
+{
 
     std::size_t newX = player.x;
     std::size_t newY = player.y;
@@ -69,11 +83,15 @@ int main()
 
     Entity player = {4, 2, '@'};
 
+    std::vector<Entity> enemies = {
+        {6, 1, 'g'},
+        {2, 3, 'g'}};
+
     bool running = true;
     while (running)
     {
 
-        drawMap(map, player);
+        drawMap(map, player, enemies);
 
         char command;
         std::cin >> command;
