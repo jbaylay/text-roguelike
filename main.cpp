@@ -2,14 +2,21 @@
 #include <string>
 #include <vector>
 
-void drawMap(const std::vector<std::string> &map, std::size_t playerX, std::size_t playerY)
+struct Entity
+{
+    std::size_t x;
+    std::size_t y;
+    char symbol;
+};
+
+void drawMap(const std::vector<std::string> &map, const Entity &player)
 {
 
     for (std::size_t y = 0; y < map.size(); y++)
     {
         for (std::size_t x = 0; x < map[y].size(); x++)
         {
-            if (x == playerX && y == playerY)
+            if (x == player.x && y == player.y)
             {
                 std::cout << "@";
             }
@@ -22,11 +29,10 @@ void drawMap(const std::vector<std::string> &map, std::size_t playerX, std::size
     }
 }
 
-void movePlayer(const std::vector<std::string> &map, char command, std::size_t &playerX, std::size_t &playerY)
-{
+void movePlayer(const std::vector<std::string> &map, char command, Entity &player){
 
-    std::size_t newX = playerX;
-    std::size_t newY = playerY;
+    std::size_t newX = player.x;
+    std::size_t newY = player.y;
 
     if (command == 'w')
     {
@@ -47,8 +53,8 @@ void movePlayer(const std::vector<std::string> &map, char command, std::size_t &
 
     if (map[newY][newX] != '#')
     {
-        playerX = newX;
-        playerY = newY;
+        player.x = newX;
+        player.y = newY;
     }
 }
 
@@ -61,19 +67,18 @@ int main()
         "#       #",
         "#########"};
 
-    std::size_t playerX = 4;
-    std::size_t playerY = 2;
+    Entity player = {4, 2, '@'};
 
     bool running = true;
     while (running)
     {
 
-        drawMap(map, playerX, playerY);
+        drawMap(map, player);
 
         char command;
         std::cin >> command;
 
-        movePlayer(map, command, playerX, playerY);
+        movePlayer(map, command, player);
 
         if (command == 'q')
         {
